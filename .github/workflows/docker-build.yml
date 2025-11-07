@@ -24,8 +24,10 @@ jobs:
       # --- Backend ---
       - name: Build Strapi backend image
         run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/portfolio-strapi:latest ./backend
-          docker push ghcr.io/${{ github.repository_owner }}/portfolio-strapi:latest
+         OWNER=${{ github.repository_owner }}
+         OWNER_LC=${OWNER,,}
+         docker build -t ghcr.io/$OWNER_LC/portfolio-strapi:latest ./backend
+         docker push ghcr.io/$OWNER_LC/portfolio-strapi:latest
 
       # --- Frontend ---
       - name: Build Next.js frontend image
