@@ -1,39 +1,48 @@
+# ---------------------------
+# STAGE 1: BUILD
+# ---------------------------
+FROM node:20-bullseye AS builder   
 
-FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Install only dependencies
+# Copia i pacchetti
 COPY package*.json ./
+
+# Installa tutte le dipendenze (inclusa dev, serve per build)
 RUN npm ci
 
-# Copy source
+# Copia tutto il codice sorgente
 COPY . .
 
-# Build admin panel with more memory
+# Aumenta la memoria e builda l’admin panel
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build
 
-
-
-FROM node:20-alpine AS runner
+# ---------------------------
+# STAGE 2: RUN (production)
+# ---------------------------
+FROM node:20-bullseye AS runner
 
 WORKDIR /app
 
-# Copy only necessary files from builder
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
+# Copia solo i file necessari per l'esecuzione
+COPY package*.json ./
+RUN npm ci --omit=dev    # installa solo le dipendenze di produzione
+
+# Copia dal builder le directory essenziali
+COPY --from=builder /app/build ./build
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.tmp ./tmp
 COPY --from=builder /app/src ./src
+COPY --from=builder /app/config ./config
+COPY --from=builder /app/extensions ./extensions
 
-# Optional: create a non-root user for security
-RUN addgroup -S strapi && adduser -S strapi -G strapi
+# Crea utente non root
+RUN addgroup --system strapi && adduser --system --ingroup strapi strapi
 USER strapi
 
 EXPOSE 1337
-
 ENV NODE_ENV=production
 
 CMD ["npm", "run", "start"]

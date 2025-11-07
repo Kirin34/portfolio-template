@@ -2,19 +2,23 @@ version: "3.9"
 
 services:
   strapi:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: strapi-backend
     ports:
       - "1337:1337"
     environment:
-      - NODE_ENV=development
-      - DATABASE_CLIENT=sqlite
-      - DATABASE_FILENAME=/data/data.db
-      - APP_KEYS=devkey1,devkey2
-      - API_TOKEN_SALT=token_salt
-      - ADMIN_JWT_SECRET=jwtsecret
-      - TRANSFER_TOKEN_SALT=transfer_salt
-      - JWT_SECRET=jwtsecret
+      NODE_ENV: development
+      DATABASE_CLIENT: sqlite
+      DATABASE_FILENAME: /data/data.db
+      APP_KEYS: devkey1,devkey2
+      API_TOKEN_SALT: token_salt
+      ADMIN_JWT_SECRET: jwtsecret
+      TRANSFER_TOKEN_SALT: transfer_salt
+      JWT_SECRET: jwtsecret
+      NODE_OPTIONS: --max-old-space-size=4096   # ✅ aumenta memoria Node
+    mem_limit: 4g                               # ✅ evita SIGKILL
     volumes:
       - ./backend:/app
       - ./backend/.tmp:/app/.tmp
@@ -22,15 +26,17 @@ services:
     restart: always
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: nextjs-frontend
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_STRAPI_URL=http://localhost:1337
-      - NODE_ENV=development
-    volumes:
-      - ./frontend:/app
+      NEXT_PUBLIC_STRAPI_URL: http://strapi:1337  # ✅ usa nome servizio (non localhost)
+      NODE_ENV: development
     depends_on:
       - strapi
+    volumes:
+      - ./frontend:/app
     restart: always
