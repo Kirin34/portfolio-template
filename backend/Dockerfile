@@ -36,7 +36,6 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.tmp ./tmp
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/config ./config
-COPY --from=builder /app/extensions ./extensions
 
 # Crea utente non root
 RUN addgroup --system strapi && adduser --system --ingroup strapi strapi
