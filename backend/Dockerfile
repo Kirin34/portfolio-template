@@ -16,7 +16,6 @@ RUN npm ci
 COPY . .
 
 # Aumenta la memoria e builda l’admin panel
-ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build
 
 # ---------------------------
@@ -31,7 +30,7 @@ COPY package*.json ./
 RUN npm ci --omit=dev    # installa solo le dipendenze di produzione
 
 # Copia dal builder le directory essenziali
-COPY --from=builder /app/build ./build
+COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.tmp ./tmp
 COPY --from=builder /app/src ./src
