@@ -10,19 +10,28 @@ services:
       - "1337:1337"
     environment:
       NODE_ENV: development
-      DATABASE_CLIENT: sqlite
-      DATABASE_FILENAME: /data/data.db
+
+      # 🔵 PostgreSQL
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: strapi
+      DATABASE_USERNAME: strapi
+      DATABASE_PASSWORD: strapi
+
       APP_KEYS: devkey1,devkey2
       API_TOKEN_SALT: token_salt
       ADMIN_JWT_SECRET: jwtsecret
       TRANSFER_TOKEN_SALT: transfer_salt
       JWT_SECRET: jwtsecret
-      NODE_OPTIONS: --max-old-space-size=4096   # ✅ aumenta memoria Node
-    mem_limit: 4g                               # ✅ evita SIGKILL
+
+      NODE_OPTIONS: --max-old-space-size=4096
+    mem_limit: 4g
     volumes:
       - ./backend:/app
-      - ./backend/.tmp:/app/.tmp
       - ./backend/public/uploads:/app/public/uploads
+    depends_on:
+      - postgres
     restart: always
 
   frontend:
@@ -33,10 +42,24 @@ services:
     ports:
       - "3000:3000"
     environment:
-      NEXT_PUBLIC_STRAPI_URL: http://strapi:1337  # ✅ usa nome servizio (non localhost)
-      NODE_ENV: development
+      NEXT_PUBLIC_STRAPI_URL: http://strapi:1337
+      NODE_ENV: production
     depends_on:
       - strapi
-    volumes:
-      - ./frontend:/app
     restart: always
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: strapi-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: strapi
+      POSTGRES_USER: strapi
+      POSTGRES_PASSWORD: strapi
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

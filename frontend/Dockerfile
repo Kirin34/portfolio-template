@@ -9,11 +9,7 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-
-###############################
-# STAGE 2 — Runtime
-###############################
-FROM node:20-alpine AS runner
+FROM node:20-bullseye AS runner
 
 WORKDIR /app
 
