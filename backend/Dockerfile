@@ -27,14 +27,11 @@ COPY --from=builder /app/src ./src
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package*.json ./
 
-# FIX: Strapi runtime expects admin build in a different folder
-RUN mkdir -p node_modules/@strapi/admin/dist/server/server && \
-    if [ -d node_modules/@strapi/admin/dist/admin/build ]; then \
-      cp -R node_modules/@strapi/admin/dist/admin/build node_modules/@strapi/admin/dist/server/server/; \
-    else \
-      echo "Admin build not found in expected dist/admin/build"; \
-      ls -R node_modules/@strapi/admin/dist; \
-    fi
+# Fix: auto-detect admin build path and copy where Strapi runtime expects
+RUN ADMIN_BUILD=$(find node_modules/@strapi/admin/dist -type d -name build | head -n 1) && \
+    echo "Admin build found at: $ADMIN_BUILD" && \
+    mkdir -p node_modules/@strapi/admin/dist/server/server && \
+    cp -R "$ADMIN_BUILD" node_modules/@strapi/admin/dist/server/server/
 
 RUN addgroup --system strapi && adduser --system --ingroup strapi strapi
 RUN chown -R strapi:strapi /app
