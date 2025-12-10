@@ -10,6 +10,9 @@ module.exports = ({ env }) => ({
       salt: env('TRANSFER_TOKEN_SALT'),
     },
   },
+  
+  serveAdminPanel: true,
+
   secrets: {
     encryptionKey: env('ENCRYPTION_KEY'),
   },
