@@ -28,10 +28,10 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/package*.json ./
 
 # Fix: auto-detect admin build path and copy where Strapi runtime expects
-RUN ADMIN_BUILD=$(find node_modules/@strapi/admin/dist -type d -name build | head -n 1) && \
-    echo "Admin build found at: $ADMIN_BUILD" && \
-    mkdir -p node_modules/@strapi/admin/dist/server/server && \
-    cp -R "$ADMIN_BUILD" node_modules/@strapi/admin/dist/server/server/
+# Fix: Strapi 5 admin build path mismatch
+RUN mkdir -p node_modules/@strapi/admin/dist/server/server && \
+    cp -R dist node_modules/@strapi/admin/dist/server/server/build
+
 
 RUN addgroup --system strapi && adduser --system --ingroup strapi strapi
 RUN chown -R strapi:strapi /app
