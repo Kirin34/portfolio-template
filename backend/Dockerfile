@@ -12,6 +12,8 @@ COPY . .
 # build dell'admin panel (genera dist/build)
 RUN npm run build
 
+# mantieni solo le dipendenze necessarie in produzione
+RUN npm prune --omit=dev
 
 
 # ------------------------------
@@ -21,23 +23,19 @@ FROM node:20-bullseye AS runner
 
 WORKDIR /app
 
+ENV NODE_ENV=production
+
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/config ./config
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
-# Fix: auto-detect admin build path and copy where Strapi runtime expects
-RUN ADMIN_BUILD=$(find node_modules/@strapi/admin/dist -type d -name build | head -n 1) && \
-    echo "Admin build found at: $ADMIN_BUILD" && \
-    mkdir -p node_modules/@strapi/admin/dist/server/server && \
-    cp -R "$ADMIN_BUILD" node_modules/@strapi/admin/dist/server/server/
 
 RUN addgroup --system strapi && adduser --system --ingroup strapi strapi
 RUN chown -R strapi:strapi /app
 USER strapi
 
 EXPOSE 1337
-ENV NODE_ENV=production
 
 CMD ["npm", "run", "start"]
