@@ -31,6 +31,9 @@ COPY --from=builder /app/src ./src
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
+RUN mkdir -p node_modules/@strapi/admin/dist/server/server && \
+    rm -rf node_modules/@strapi/admin/dist/server/server/build && \
+    cp -R dist/build node_modules/@strapi/admin/dist/server/server/
 
 RUN addgroup --system strapi && adduser --system --ingroup strapi strapi
 RUN chown -R strapi:strapi /app
