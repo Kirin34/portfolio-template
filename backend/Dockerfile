@@ -36,6 +36,6 @@ RUN addgroup --system strapi && adduser --system --ingroup strapi strapi
 RUN chown -R strapi:strapi /app
 USER strapi
 
-EXPOSE 1337
+EXPOSE 8080
 
 CMD ["npm", "run", "start"]
