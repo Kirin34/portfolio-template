@@ -6,7 +6,7 @@ import Header from "@/components/Header";
 
 
 export default async function Home() {
-  const services = (await fetchFromStrapi("services")) || [];
+  const services = (await fetchFromStrapi("Service")) || [];
 
   return (
     
