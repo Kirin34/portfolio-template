@@ -1,4 +1,4 @@
-export default ({ env }) => ({
+module.exports = ({ env }) => ({
   auth: {
     secret: env('ADMIN_JWT_SECRET'),
   },
@@ -10,6 +10,9 @@ export default ({ env }) => ({
       salt: env('TRANSFER_TOKEN_SALT'),
     },
   },
+  
+  serveAdminPanel: true,
+
   secrets: {
     encryptionKey: env('ENCRYPTION_KEY'),
   },

@@ -4,31 +4,41 @@ WORKDIR /app
 
 COPY package*.json ./
 
-COPY . .
-
+# installa TUTTE le dipendenze necessarie (incluso admin)
 RUN npm ci
 
+COPY . .
 
+# build dell'admin panel (genera dist/build)
 RUN npm run build
 
+# mantieni solo le dipendenze necessarie in produzione
+RUN npm prune --omit=dev
 
+
+# ------------------------------
+# RUNNER
+# ------------------------------
 FROM node:20-bullseye AS runner
 
 WORKDIR /app
 
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/node_modules ./node_modules    
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/public ./public
+ENV NODE_ENV=production
 
-RUN rm -rf .tmp
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/config ./config
+COPY --from=builder /app/src ./src
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
+RUN mkdir -p node_modules/@strapi/admin/dist/server/server && \
+    rm -rf node_modules/@strapi/admin/dist/server/server/build && \
+    cp -R dist/build node_modules/@strapi/admin/dist/server/server/
 
 RUN addgroup --system strapi && adduser --system --ingroup strapi strapi
 RUN chown -R strapi:strapi /app
-
 USER strapi
 
-EXPOSE 1337
-ENV NODE_ENV=production
+EXPOSE 8080
 
 CMD ["npm", "run", "start"]
