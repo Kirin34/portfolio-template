@@ -7,7 +7,7 @@ import Header from "@/components/Header";
 
 export default async function Home() {
 
-  const res = await fetchFromStrapi("/services?populate=*");
+  const res = await fetchFromStrapi("services");
   const services = res?.data ?? [];
 
   return (
