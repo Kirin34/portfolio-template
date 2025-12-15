@@ -5,8 +5,7 @@ import Header from "@/components/Header";
 import { fetchFromStrapi } from "@/lib/api";
 
 export default async function Home() {
-  // ✅ populate corretto
-  const res = await fetchFromStrapi("services");
+  const res = await fetchFromStrapi("services?populate=*");
   const services = res?.data ?? [];
 
   return (
@@ -25,13 +24,11 @@ export default async function Home() {
         ) : (
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto px-6">
             {services.map((s: any) => {
-              // ✅ Strapi 5 media
-              const imgData = s.service_image?.data?.[0];
-              const imgUrl = imgData?.url
-                ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${imgData.url}`
+              const img = s.service_image?.[0];
+              const imgUrl = img?.url
+                ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${img.url}`
                 : "/placeholder.jpg";
 
-              // ✅ blocks safe
               const desc =
                 Array.isArray(s.description) &&
                 s.description[0]?.children?.[0]?.text
@@ -40,33 +37,23 @@ export default async function Home() {
 
               return (
                 <div
-                  key={s.documentId}
+                  key={s.id}
                   className="p-6 rounded-xl shadow-md bg-white/50 backdrop-blur-sm hover:shadow-lg transition"
                 >
                   <img
                     src={imgUrl}
-                    alt={
-                      imgData?.alternativeText ||
-                      s.title ||
-                      "Servizio"
-                    }
+                    alt={img?.alternativeText || s.title}
                     className="w-full h-64 object-cover rounded-md mb-4"
                   />
 
-                  <h2 className="text-2xl font-semibold mb-2">
-                    {s.title}
-                  </h2>
+                  <h2 className="text-2xl font-semibold mb-2">{s.title}</h2>
 
                   {desc && (
-                    <p className="text-sm opacity-80 mb-3">
-                      {desc}
-                    </p>
+                    <p className="text-sm opacity-80 mb-3">{desc}</p>
                   )}
 
                   {s.price && (
-                    <p className="text-primary font-bold">
-                      {s.price}€
-                    </p>
+                    <p className="text-primary font-bold">{s.price}€</p>
                   )}
                 </div>
               );
