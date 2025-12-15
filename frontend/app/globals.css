@@ -2,17 +2,19 @@
 
 /* 🌿 Palette armoniosa */
 :root {
-  --background: #fdfbf9;
-  --foreground: #2e2a27;
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
 
-  --color-primary: #b388eb;
-  --color-accent: #f6e9ff;
-  --color-soft: #f0e7ff;
-  --color-muted: #eaeaea;
-
-  --font-serif: "Playfair Display", serif;
-  --font-sans: "Poppins", sans-serif;
+  --color-primary: #b11226;      /* rosso profondo */
+  --color-foreground: #0f0f0f;   /* quasi nero */
+  --color-muted: #555555;
+  --color-background: #fafafa;
 }
+
+body {
+  font-family: var(--font-body);
+}
+
 
 /* ✨ Stile generale */
 body {
