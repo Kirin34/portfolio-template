@@ -37,21 +37,21 @@ export default function Header() {
           </a>
         </nav>
 
-        {/* 🎨 Logo centrale */}
-        <a
-          href="#top"
-          className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center"
-        >
-          <img
-            src="/logo.png"
-            alt="Logo artista"
-            className={`h-16 md:h-20 transition-all duration-300 ${
-              scrolled
-                ? "opacity-90 scale-95"
-                : "opacity-100 scale-100 drop-shadow-[0_0_6px_rgba(255,255,255,0.5)]"
-            }`}
-          />
-        </a>
+<a
+  href="#top"
+  className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center"
+>
+  <img
+    src="/logo.png"
+    alt="Logo artista"
+    className={`h-12 md:h-14 transition-all duration-300 ${
+      scrolled
+        ? "opacity-90 scale-95"
+        : "opacity-100 scale-100 drop-shadow-[0_0_4px_rgba(255,255,255,0.4)]"
+    }`}
+  />
+</a>
+
 
         {/* 🔹 Menu destro */}
         <nav
