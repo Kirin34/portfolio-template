@@ -1,4 +1,4 @@
-module.exports = ({ env }) => {
+export default ({ env }) => {
   console.log("DATABASE DEBUG >>>", {
     client: 'postgres',
     DATABASE_URL: env('DATABASE_URL'),
@@ -30,7 +30,10 @@ module.exports = ({ env }) => {
         min: env.int('DATABASE_POOL_MIN', 2),
         max: env.int('DATABASE_POOL_MAX', 10),
       },
-      acquireConnectionTimeout: env.int('DATABASE_CONNECTION_TIMEOUT', 60000),
+      acquireConnectionTimeout: env.int(
+        'DATABASE_CONNECTION_TIMEOUT',
+        60000
+      ),
     },
   };
 };
