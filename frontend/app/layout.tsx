@@ -1,14 +1,8 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
 
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-heading",
-  display: "swap",
-});
-
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-body",
   display: "swap",
@@ -16,7 +10,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Orme Design",
-  description: "Orme Design – concept & art",
+  description: "Orme Design – Creative & Content",
 };
 
 export default function RootLayout({
@@ -25,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="it" className={`${playfair.variable} ${inter.variable}`}>
+    <html lang="it" className={dmSans.variable}>
       <body className="antialiased bg-[--color-background] text-[--color-foreground]">
         {children}
       </body>

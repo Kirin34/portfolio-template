@@ -2,14 +2,14 @@
 
 /* 🌿 Palette armoniosa */
 :root {
-  --font-heading: 'Playfair Display', serif;
-  --font-body: 'Inter', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
 
-  --color-primary: #b11226;      /* rosso profondo */
-  --color-foreground: #0f0f0f;   /* quasi nero */
-  --color-muted: #555555;
+  --color-primary: #b11226;        /* rosso profondo */
+  --color-foreground: #0f0f0f;     /* quasi nero */
+  --color-muted: #5a5a5a;
   --color-background: #fafafa;
 }
+
 
 body {
   font-family: var(--font-body);
